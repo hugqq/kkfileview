@@ -28,8 +28,16 @@
                 </a>
             </h4>
         </div>
+
         <div class="panel-body">
-            <label>文件下载地址：<input type="text" id="_url" style="min-width:50em"/></label>
+            <label>pdf文件快速预览地址：<input type="text" id="pdf_url" style="min-width:50em"/></label>
+            <form target="_blank" id="preview_by_pdf_url" style="display: inline-block">
+                <input type="submit" value="预览">
+            </form>
+        </div>
+
+        <div class="panel-body">
+            <label>文件预览地址：<input type="text" id="_url" style="min-width:50em"/></label>
             <form action="${baseUrl}onlinePreview" target="_blank" id="preview_by_url" style="display: inline-block">
                 <input type="hidden" name="url"/>
                 <input type="submit" value="预览">
@@ -41,7 +49,7 @@
             <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion"
                    href="#collapseTwo">
-                    预览测试
+                    自定义文件预览(一日一清)
                 </a>
             </h4>
         </div>
@@ -122,21 +130,28 @@
             return data;
         });
 
+        $('#preview_by_pdf_url').submit(function() {
+            var pdfUrl = $("#pdf_url").val()
+            if (pdfUrl.indexOf('.pdf') === -1) {
+                alert('请输入正确的pdf文件地址');
+                return false;
+            }else {
+                window.location.href="https://ocrud.com/doc/web/viewer.html?file="+pdfUrl
+            }
+        });
+
         $('#preview_by_url').submit(function() {
             var _url = $("#_url").val();
             var urlField = $(this).find('[name=url]');
             if (_url.indexOf("%") > -1) {
                 var decodeURI1 = decodeURI(_url);
-                alert("已自动解码为：" + decodeURI1);
                 var b64Encoded = Base64.encode(decodeURI1);
                 urlField.val(b64Encoded);
             } else {
                 var b64Encoded = Base64.encode(_url);
                 urlField.val(b64Encoded);
             }
-
         });
-
 
         function showLoadingDiv() {
             var height = window.document.documentElement.clientHeight - 1;
